@@ -80,7 +80,7 @@ Thread::Thread(char* threadName)
 Thread::~Thread()
 {
     DEBUG(dbgThread, "Deleting thread: " << name);
-    threadNum--;
+    //threadNum--;
 
     ASSERT(this != kernel->currentThread);
     if (stack != NULL)
@@ -432,7 +432,7 @@ SimpleThread(int which)
     for (num = 0; num < 5; num++) {
 	cout << "*** thread " << which << " userid:" << kernel->currentThread->usrID << " threadID:" << kernel->currentThread->threadID <<" looped " << num << " times\n" << endl;
 	cout << "Current Thread:" << kernel->currentThread->threadNum<<endl;
-        kernel->currentThread->Yield();
+        //kernel->currentThread->Yield();
     }
 }
 
