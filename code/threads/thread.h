@@ -88,6 +88,7 @@ class Thread {
 					// must not be running when delete 
 					// is called
 
+
     // basic thread operations
 
     void Fork(VoidFunctionPtr func, void *arg); 
@@ -104,6 +105,12 @@ class Thread {
     char* getName() { return (name); }
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
+
+    //----
+    int usrID;
+    int threadID;
+    static int threadNum;
+    //----
 
   private:
     // some of the private data for this class is listed above

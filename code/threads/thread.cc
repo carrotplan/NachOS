@@ -21,9 +21,14 @@
 #include "switch.h"
 #include "synch.h"
 #include "sysdep.h"
+#include "sys/types.h"
+#include "unistd.h"
+
 
 // this is put at the top of the execution stack, for detecting stack overflows
 const int STACK_FENCEPOST = 0xdedbeef;
+
+int Thread::threadNum = 0;
 
 //----------------------------------------------------------------------
 // Thread::Thread
@@ -35,6 +40,11 @@ const int STACK_FENCEPOST = 0xdedbeef;
 
 Thread::Thread(char* threadName)
 {
+
+    threadNum++;
+    usrID = (int)getuid();
+    threadID = threadNum;
+
     name = threadName;
     stackTop = NULL;
     stack = NULL;
@@ -62,6 +72,7 @@ Thread::Thread(char* threadName)
 Thread::~Thread()
 {
     DEBUG(dbgThread, "Deleting thread: " << name);
+    threadNum--;
 
     ASSERT(this != kernel->currentThread);
     if (stack != NULL)
@@ -411,7 +422,7 @@ SimpleThread(int which)
     int num;
     
     for (num = 0; num < 5; num++) {
-	cout << "*** thread " << which << " looped " << num << " times\n";
+	cout << "*** thread " << which << " userid:" << kernel->currentThread->usrID << " threadID:" << kernel->currentThread->threadID <<" looped " << num << " times\n";
         kernel->currentThread->Yield();
     }
 }
