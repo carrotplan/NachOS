@@ -35,7 +35,6 @@ char* getDiffName(int i) {
     int a = i;
     char* buf = new char[strlen(s) + sizeof(a) + 1];
     sprintf(buf, "%s%d", s, a);
-    printf("%s\n", buf);
     return buf;
 }
 
@@ -455,10 +454,11 @@ Thread::SelfTest()
     SimpleThread(0);
      */
 
-    for(int i = 0; i < 100; i++) {
+    for(int i = 0; i < 1000; i++) {
         Thread *t = new Thread(getDiffName(i));
-
         t->Fork((VoidFunctionPtr) SimpleThread, (void *) i);
+        if(kernel->currentThread->threadNum > 128)
+            cout<<"the number of the threads reach to the upper limits"<<endl;
     }
 }
 
