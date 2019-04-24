@@ -430,14 +430,15 @@ SimpleThread(int which)
     int num;
     
     for (num = 0; num < 5; num++) {
-	cout << "*** thread " << which << " userid:" << kernel->currentThread->usrID << " threadID:" << kernel->currentThread->threadID <<" looped " << num << " times\n";
+	cout << "*** thread " << which << " userid:" << kernel->currentThread->usrID << " threadID:" << kernel->currentThread->threadID <<" looped " << num << " times\n" << endl;
+	cout << "Current Thread:" << kernel->currentThread->threadNum<<endl;
         kernel->currentThread->Yield();
     }
 }
 
 //----------------------------------------------------------------------
 // Thread::SelfTest
-// 	Set up a ping-pong between two threads, by forking a thread 
+// 	Set up a ping-pong between two threads, by forking a thread
 //	to call SimpleThread, and then calling SimpleThread ourselves.
 //----------------------------------------------------------------------
 
