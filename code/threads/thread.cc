@@ -30,6 +30,15 @@ const int STACK_FENCEPOST = 0xdedbeef;
 
 int Thread::threadNum = 0;
 
+char* getDiffName(int i) {
+    char* s = "forkedThread";
+    int a = i;
+    char* buf = new char[strlen(s) + sizeof(a) + 1];
+    sprintf(buf, "%s%d", s, a);
+    printf("%s\n", buf);
+    return buf;
+}
+
 //----------------------------------------------------------------------
 // Thread::Thread
 // 	Initialize a thread control block, so that we can then call
@@ -438,10 +447,18 @@ Thread::SelfTest()
 {
     DEBUG(dbgThread, "Entering Thread::SelfTest");
 
+    /*
     Thread *t = new Thread("forked thread");
 
     t->Fork((VoidFunctionPtr) SimpleThread, (void *) 1);
     kernel->currentThread->Yield();
     SimpleThread(0);
+     */
+
+    for(int i = 0; i < 100; i++) {
+        Thread *t = new Thread(getDiffName(i));
+
+        t->Fork((VoidFunctionPtr) SimpleThread, (void *) i);
+    }
 }
 
