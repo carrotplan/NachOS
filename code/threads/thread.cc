@@ -428,12 +428,13 @@ static void
 SimpleThread(int which)
 {
     int num;
-    
+
     for (num = 0; num < 5; num++) {
-	cout << "*** thread " << which << " userid:" << kernel->currentThread->usrID << " threadID:" << kernel->currentThread->threadID <<" looped " << num << " times\n" << endl;
-	cout << "Current Thread:" << kernel->currentThread->threadNum<<endl;
-        //kernel->currentThread->Yield();
+	    cout << "*** thread " << which << " userid:" << kernel->currentThread->usrID << " threadID:" << kernel->currentThread->threadID <<" looped " << num << " times\n" << endl;
+	    kernel->currentThread->Yield();
     }
+
+
 }
 
 //----------------------------------------------------------------------
@@ -453,13 +454,19 @@ Thread::SelfTest()
     t->Fork((VoidFunctionPtr) SimpleThread, (void *) 1);
     kernel->currentThread->Yield();
     SimpleThread(0);
-     */
+    */
 
-    for(int i = 0; i < 1000; i++) {
+
+    for(int i = 0; i < 200; i++) {
+
         Thread *t = new Thread(getDiffName(i));
-        t->Fork((VoidFunctionPtr) SimpleThread, (void *) i);
-        if(kernel->currentThread->threadNum > 128)
+
+        if( t->threadNum > 128){
             cout<<"the number of the threads reach to the upper limits"<<endl;
+        }
+
+        t->Fork((VoidFunctionPtr) SimpleThread, (void *) i);
+
     }
 }
 
