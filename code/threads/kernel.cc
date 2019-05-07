@@ -18,11 +18,17 @@
 #include "synchdisk.h"
 #include "post.h"
 
+
 //----------------------------------------------------------------------
 // Kernel::Kernel
 // 	Interpret command line arguments in order to determine flags 
 //	for the initialization (see also comments in main.cc)  
 //----------------------------------------------------------------------
+
+int threadIDList[128]; //created by hlr
+
+int threadCount; //@hlr
+const int MAX_THREAD_COUNT = 128; //@hlr
 
 Kernel::Kernel(int argc, char **argv)
 {
@@ -87,6 +93,13 @@ Kernel::Kernel(int argc, char **argv)
 void
 Kernel::Initialize()
 {
+
+    //-------created by hlr--------
+    for(int i = 0; i < 128; i++) {
+        threadIDList[i] = 0;
+    }
+    //------
+
     // We didn't explicitly allocate the current thread we are running in.
     // But if it ever tries to give up the CPU, we better have a Thread
     // object to save its state. 

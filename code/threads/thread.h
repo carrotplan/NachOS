@@ -44,6 +44,7 @@
 #include "machine.h"
 #include "addrspace.h"
 
+
 // CPU register state to be saved on context switch.  
 // The x86 needs to save only a few registers, 
 // SPARC and MIPS needs to save 10 registers, 
@@ -73,6 +74,9 @@ enum ThreadStatus { JUST_CREATED, RUNNING, READY, BLOCKED };
 //    
 //  Some threads also belong to a user address space; threads
 //  that only run in the kernel have a NULL address space.
+
+//extern int threadIDList[128]; //created by hlr
+
 
 class Thread {
   private:
@@ -106,12 +110,6 @@ class Thread {
     void Print() { cout << name; }
     void SelfTest();		// test whether thread impl is working
 
-    //----
-    int usrID;
-    int threadID;
-    static int threadNum;
-    //----
-
   private:
     // some of the private data for this class is listed above
     
@@ -131,11 +129,23 @@ class Thread {
 
     int userRegisters[NumTotalRegs];	// user-level CPU register state
 
+
+    //-------created by hlr---------
+    int userID;
+    int threadID;
+    //------------------------------
+
+
   public:
     void SaveUserState();		// save user-level register state
     void RestoreUserState();		// restore user-level register state
 
     AddrSpace *space;			// User code this thread is running.
+
+    //------created by hlr----------
+    int getUserID();
+    int getThreadID();
+
 };
 
 // external function, dummy routine whose sole job is to call Thread::Print

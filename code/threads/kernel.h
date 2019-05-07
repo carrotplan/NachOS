@@ -25,6 +25,11 @@ class SynchConsoleInput;
 class SynchConsoleOutput;
 class SynchDisk;
 
+extern int threadIDList[128]; // created by hlr
+
+extern int threadCount; //@hlr 对线程计数
+extern const int MAX_THREAD_COUNT; //@hlr 最大线程总数
+
 class Kernel {
   public:
     Kernel(int argc, char **argv);

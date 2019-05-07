@@ -28,7 +28,9 @@
 // this is put at the top of the execution stack, for detecting stack overflows
 const int STACK_FENCEPOST = 0xdedbeef;
 
-int Thread::threadNum = 0;
+//int Thread::threadNum = 0; //created by hlr
+
+//extern int threadIDList[128]; //created by hlr
 
 char* getDiffName(int i) {
     char* s = "forkedThread";
@@ -49,9 +51,19 @@ char* getDiffName(int i) {
 Thread::Thread(char* threadName)
 {
 
-    threadNum++;
-    usrID = (int)getuid();
-    threadID = threadNum;
+    //----created by hlr------
+    //threadNum++;
+    userID = (int)getuid();
+
+    for(int i = 0; i < 128; i++) {
+        if (threadIDList[i] == 0) {
+            threadID = i;
+            threadIDList[i] = 1;
+            break;
+        }
+    }
+
+    //----------
 
     name = threadName;
     stackTop = NULL;
@@ -80,7 +92,12 @@ Thread::Thread(char* threadName)
 Thread::~Thread()
 {
     DEBUG(dbgThread, "Deleting thread: " << name);
+    //----created by hlr
+    threadIDList[threadID] = 0;
+
     //threadNum--;
+
+    //-----------
 
     ASSERT(this != kernel->currentThread);
     if (stack != NULL)
@@ -115,7 +132,16 @@ Thread::Fork(VoidFunctionPtr func, void *arg)
     IntStatus oldLevel;
     
     DEBUG(dbgThread, "Forking thread: " << name << " f(a): " << (int) func << " " << arg);
-    
+
+    //@hlr
+    threadCount++;
+    if(threadCount > MAX_THREAD_COUNT) {
+        cout<<"the number of the threads reach to the upper limits"<<endl<<endl;
+        return; //大于最大数量不允许创建
+    }
+    //-----
+
+
     StackAllocate(func, arg);
 
     oldLevel = interrupt->SetLevel(IntOff);
@@ -190,7 +216,10 @@ Thread::Begin ()
 void
 Thread::Finish ()
 {
-    (void) kernel->interrupt->SetLevel(IntOff);		
+    (void) kernel->interrupt->SetLevel(IntOff);
+
+    threadCount--;  //@hlr
+
     ASSERT(this == kernel->currentThread);
     
     DEBUG(dbgThread, "Finishing thread: " << name);
@@ -430,7 +459,8 @@ SimpleThread(int which)
     int num;
 
     for (num = 0; num < 5; num++) {
-	    cout << "*** thread " << which << " userid:" << kernel->currentThread->usrID << " threadID:" << kernel->currentThread->threadID <<" looped " << num << " times\n" << endl;
+	    cout << "*** thread " << which << " userid:" << kernel->currentThread->getUserID()
+	    << " threadID:" << kernel->currentThread->getThreadID() <<" looped " << num << " times\n" << endl; //edit by hlr
 	    kernel->currentThread->Yield();
     }
 
@@ -457,16 +487,22 @@ Thread::SelfTest()
     */
 
 
-    for(int i = 0; i < 200; i++) {
+    //------create by hlr---------
+    for(int i = 0; i < 2000; i++) {
 
         Thread *t = new Thread(getDiffName(i));
-
-        if( t->threadNum > 128){
-            cout<<"the number of the threads reach to the upper limits"<<endl;
-        }
 
         t->Fork((VoidFunctionPtr) SimpleThread, (void *) i);
 
     }
+    //----------------------------
 }
 
+
+int Thread::getThreadID() {
+    return this->threadID;
+}
+
+int Thread::getUserID() {
+    return this->userID;
+}
