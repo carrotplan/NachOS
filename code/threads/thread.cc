@@ -473,10 +473,16 @@ SimpleThread(int which)
 //	to call SimpleThread, and then calling SimpleThread ourselves.
 //----------------------------------------------------------------------
 
+
+void TestPC();
+
+
 void
 Thread::SelfTest()
 {
     DEBUG(dbgThread, "Entering Thread::SelfTest");
+
+    TestPC();
 
     /*
     Thread *t = new Thread("forked thread");
@@ -487,6 +493,8 @@ Thread::SelfTest()
     */
 
 
+    /*
+
     //------create by hlr---------
     for(int i = 0; i < 2000; i++) {
 
@@ -496,6 +504,10 @@ Thread::SelfTest()
 
     }
     //----------------------------
+
+     */
+
+
 }
 
 
@@ -506,3 +518,67 @@ int Thread::getThreadID() {
 int Thread::getUserID() {
     return this->userID;
 }
+
+//@hlr cosumer and  producer
+
+
+int buf = 0;
+Lock *atWareHouse;
+Condition *hasItem;
+
+
+void producer(int id) {
+
+    int i = 0;
+
+    while (true) {
+
+        atWareHouse->Acquire();
+        while (buf == 1) {
+            hasItem->Wait(atWareHouse);
+        }
+        cout<<"ID:"<<id<<" "<<"producer is producing wait..."<<" i="<<i<<endl;
+        buf = 1;
+        hasItem->Signal(atWareHouse);
+        atWareHouse->Release();
+        i++;
+    }
+
+}
+
+void consumer(int id) {
+
+    int i = 0;
+
+    while (true) {
+
+        atWareHouse->Acquire();
+        while (buf == 0) {
+            hasItem->Wait(atWareHouse);
+        }
+        cout<<"ID:"<<id<<" "<<"consumer takes one item..." <<" i="<<i<<endl;
+        buf = 0;
+        hasItem->Signal(atWareHouse);
+        atWareHouse->Release();
+        i++;
+
+    }
+
+}
+
+void TestPC() {
+
+    atWareHouse = new Lock("atWareHouse");
+    hasItem = new Condition("hasItem");
+
+    Thread *t2 = new Thread("consumer");
+    t2->Fork(consumer, (void*)0);
+
+    Thread *t1 = new Thread("producer");
+    t1->Fork(producer, (void*)1);
+
+
+}
+
+
+
