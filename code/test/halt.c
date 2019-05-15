@@ -15,6 +15,17 @@
 int
 main()
 {
+
+    int mulResult,addResult,divResult;
+
+
+    addResult = Add(5,6);
+    mulResult = Mul(2,6);
+    divResult = Div(25,5);
+
+
     Halt();
     /* not reached */
+
+
 }

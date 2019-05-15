@@ -50,6 +50,7 @@ Halt:
 	j	$31
 	.end Halt
 
+
 	.globl Add
 	.ent	Add
 Add:
@@ -57,6 +58,25 @@ Add:
 	syscall
 	j 	$31
 	.end Add
+
+//@hlr
+    .globl Mul
+    .ent	Mul
+Mul:
+    addiu $2,$0,SC_Mul
+    syscall
+    j 	$31
+    .end Mul
+
+
+    .globl Div
+    .ent	Div
+Div:
+    addiu $2,$0,SC_Div
+    syscall
+    j 	$31
+    .end Div
+//-----
 
 	.globl Exit
 	.ent	Exit
@@ -217,6 +237,8 @@ Clock:
 	syscall
 	j       $31
 	.end Clock
+
+
 
 /* dummy function to keep gcc happy */
         .globl  __main

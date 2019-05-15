@@ -7,12 +7,15 @@
 
 #include "syscall.h"
 
+
 int
 main()
 {
   int result;
   
   result = Add(42, 23);
+
+  //printf("Add 43 + 23 = %d", result);
 
   Halt();
   /* not reached */

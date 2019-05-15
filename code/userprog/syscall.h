@@ -42,6 +42,14 @@
 
 #define SC_Add		42
 
+
+//@hlr
+#define SC_Mul   43
+
+#define SC_Div   44
+
+//-------
+
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -63,6 +71,11 @@ void Halt();
  */ 
 
 int Add(int op1, int op2);
+
+//@hlr
+int Mul(int op1, int op2);
+int Div(int op1, int op2);
+//----
 
 /* Address space control operations: Exit, Exec, Execv, and Join */
 

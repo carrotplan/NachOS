@@ -27,6 +27,18 @@ int SysAdd(int op1, int op2)
   return op1 + op2;
 }
 
+//@hlr
+int SysMul(int op1, int op2)
+{
+    return op1 * op2;
+}
+
+int SysDiv(int op1, int op2)
+{
+    return op1 / op2;
+}
+
+//
 
 
 
